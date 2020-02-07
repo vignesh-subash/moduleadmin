@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="http://laraadmin.com/img/laraadmin-256.png">
+
   <h1 align="center" style="margin-top:5px;">Module Admin 1.0</h1>
 </p>
 
