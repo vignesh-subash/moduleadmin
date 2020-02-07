@@ -1,8 +1,4 @@
 <?php
-/**
- * Model genrated using LaraAdmin
- * Help: http://laraadmin.com
- */
 
 namespace App\Models;
 
@@ -12,11 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class __model_class_name__ extends Model
 {
     use SoftDeletes;
-	
+
 	protected $table = '__db_table_name__';
-	
+
 	protected $hidden = [
-        
+
     ];
 
 	protected $guarded = [];

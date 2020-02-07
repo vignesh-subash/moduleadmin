@@ -1,12 +1,12 @@
 <?php
-namespace Dwij\Laraadmin;
+namespace Kipl\Moduleadmin;
 
 use Exception;
 use Illuminate\Filesystem\Filesystem;
-use Dwij\Laraadmin\Models\Module;
-use Dwij\Laraadmin\Models\ModuleFieldTypes;
-use Dwij\Laraadmin\Helpers\LAHelper;
-use Dwij\Laraadmin\Models\Menu;
+use Kipl\Moduleadmin\Models\Module;
+use Kipl\Moduleadmin\Models\ModuleFieldTypes;
+use Kipl\Moduleadmin\Helpers\CAHelper;
+use Kipl\Moduleadmin\Models\Menu;
 
 class CodeGenerator
 {
@@ -20,9 +20,9 @@ class CodeGenerator
 
         $templateDirectory = __DIR__.'/stubs';
 
-        LAHelper::log("info", "Creating controller...", $comm);
+        CAHelper::log("info", "Creating controller...", $comm);
         $md = file_get_contents($templateDirectory."/controller.stub");
-		
+
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__model_name__", $config->modelName, $md);
         $md = str_replace("__module_name__", $config->moduleName, $md);
@@ -48,7 +48,7 @@ class CodeGenerator
 
         $templateDirectory = __DIR__.'/stubs';
 
-        LAHelper::log("info", "Creating model...", $comm);
+        CAHelper::log("info", "Creating model...", $comm);
         $md = file_get_contents($templateDirectory."/model.stub");
 
         $md = str_replace("__model_class_name__", $config->modelName, $md);
@@ -61,9 +61,9 @@ class CodeGenerator
 
         $templateDirectory = __DIR__.'/stubs';
 
-        LAHelper::log("info", "Creating views...", $comm);
+        CAHelper::log("info", "Creating views...", $comm);
         // Create Folder
-        @mkdir(base_path("resources/views/la/".$config->dbTableName), 0777, true);
+        @mkdir(base_path("resources/views/ca/".$config->dbTableName), 0777, true);
 
         // ============================ Listing / Index ============================
         $md = file_get_contents($templateDirectory."/views/index.blade.stub");
@@ -72,18 +72,18 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
-		$md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+	    	$md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
         $md = str_replace("__module_name_2__", $config->moduleName2, $md);
 
         // Listing columns
         $inputFields = "";
         foreach ($config->module->fields as $field) {
-            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
+            $inputFields .= "\t\t\t\t\t@ca_input($"."module, '".$field['colname']."')\n";
         }
         $inputFields = trim($inputFields);
         $md = str_replace("__input_fields__", $inputFields, $md);
 
-        file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/index.blade.php'), $md);
+        file_put_contents(base_path('resources/views/ca/'.$config->dbTableName.'/index.blade.php'), $md);
 
         // ============================ Edit ============================
         $md = file_get_contents($templateDirectory."/views/edit.blade.stub");
@@ -92,18 +92,18 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__controller_class_name__", $config->controllerName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
-		$md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
+				$md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
         $md = str_replace("__module_name_2__", $config->moduleName2, $md);
 
         // Listing columns
         $inputFields = "";
         foreach ($config->module->fields as $field) {
-            $inputFields .= "\t\t\t\t\t@la_input($"."module, '".$field['colname']."')\n";
+            $inputFields .= "\t\t\t\t\t@ca_input($"."module, '".$field['colname']."')\n";
         }
         $inputFields = trim($inputFields);
         $md = str_replace("__input_fields__", $inputFields, $md);
 
-        file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/edit.blade.php'), $md);
+        file_put_contents(base_path('resources/views/ca/'.$config->dbTableName.'/edit.blade.php'), $md);
 
         // ============================ Show ============================
         $md = file_get_contents($templateDirectory."/views/show.blade.stub");
@@ -112,25 +112,25 @@ class CodeGenerator
         $md = str_replace("__db_table_name__", $config->dbTableName, $md);
         $md = str_replace("__singular_var__", $config->singularVar, $md);
         $md = str_replace("__singular_cap_var__", $config->singularCapitalVar, $md);
-		$md = str_replace("__module_name_2__", $config->moduleName2, $md);
+				$md = str_replace("__module_name_2__", $config->moduleName2, $md);
 
         // Listing columns
         $displayFields = "";
         foreach ($config->module->fields as $field) {
-            $displayFields .= "\t\t\t\t\t\t@la_display($"."module, '".$field['colname']."')\n";
+            $displayFields .= "\t\t\t\t\t\t@ca_display($"."module, '".$field['colname']."')\n";
         }
         $displayFields = trim($displayFields);
         $md = str_replace("__display_fields__", $displayFields, $md);
 
-        file_put_contents(base_path('resources/views/la/'.$config->dbTableName.'/show.blade.php'), $md);
+        file_put_contents(base_path('resources/views/ca/'.$config->dbTableName.'/show.blade.php'), $md);
     }
 
     public static function appendRoutes($config, $comm = null) {
 
         $templateDirectory = __DIR__.'/stubs';
 
-        LAHelper::log("info", "Appending routes...", $comm);
-        if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
+        CAHelper::log("info", "Appending routes...", $comm);
+        if(\Kipl\Moduleadmin\Helpers\CAHelper::laravel_ver() == 5.5) {
 			$routesFile = base_path('routes/admin_routes.php');
 		} else {
 			$routesFile = app_path('Http/admin_routes.php');
@@ -139,7 +139,7 @@ class CodeGenerator
 		$contents = file_get_contents($routesFile);
 		$contents = str_replace('});', '', $contents);
 		file_put_contents($routesFile, $contents);
-		
+
         $md = file_get_contents($templateDirectory."/routes.stub");
 
         $md = str_replace("__module_name__", $config->moduleName, $md);
@@ -155,7 +155,7 @@ class CodeGenerator
 
         // $templateDirectory = __DIR__.'/stubs';
 
-        LAHelper::log("info", "Appending Menu...", $comm);
+        CAHelper::log("info", "Appending Menu...", $comm);
         if(Menu::where("url", $config->dbTableName)->count() == 0) {
             Menu::create([
                 "name" => $config->moduleName,
@@ -168,9 +168,9 @@ class CodeGenerator
 
         // Old Method to add Menu
         // $menu = '<li><a href="{{ url(config("laraadmin.adminRoute") . '."'".'/'.$config->dbTableName."'".') }}"><i class="fa fa-cube"></i> <span>'.$config->moduleName.'</span></a></li>'."\n".'            <!-- LAMenus -->';
-        // $md = file_get_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'));
+        // $md = file_get_contents(base_path('resources/views/ca/layouts/partials/sidebar.blade.php'));
         // $md = str_replace("<!-- LAMenus -->", $menu, $md);
-        // file_put_contents(base_path('resources/views/la/layouts/partials/sidebar.blade.php'), $md);
+        // file_put_contents(base_path('resources/views/ca/layouts/partials/sidebar.blade.php'), $md);
     }
 
 	/**
@@ -197,10 +197,10 @@ class CodeGenerator
         $dbTableName = $tableP;
         $moduleName = ucfirst(str_plural($table));
 
-		LAHelper::log("info", "Model:\t   ".$modelName, $comm);
-		LAHelper::log("info", "Module:\t   ".$moduleName, $comm);
-		LAHelper::log("info", "Table:\t   ".$dbTableName, $comm);
-		LAHelper::log("info", "Migration: ".$migrationName."\n", $comm);
+		CAHelper::log("info", "Model:\t   ".$modelName, $comm);
+		CAHelper::log("info", "Module:\t   ".$moduleName, $comm);
+		CAHelper::log("info", "Table:\t   ".$dbTableName, $comm);
+		CAHelper::log("info", "Migration: ".$migrationName."\n", $comm);
 
         // Reverse migration generation from table
         $generateData = "";
@@ -213,7 +213,7 @@ class CodeGenerator
             // check if table, module and module fields exists
             $module = Module::get($moduleName);
             if(isset($module)) {
-				LAHelper::log("info", "Module exists :\t   ".$moduleName, $comm);
+				CAHelper::log("info", "Module exists :\t   ".$moduleName, $comm);
 
                 $viewColumnName = $module->view_col;
 				$faIcon = $module->fa_icon;
@@ -265,18 +265,18 @@ class CodeGenerator
                     }
                 }
                 if($fileExists) {
-					LAHelper::log("info", "Replacing old migration file: ".$fileExistName, $comm);
+					CAHelper::log("info", "Replacing old migration file: ".$fileExistName, $comm);
                     $migrationFileName = $fileExistName;
                 }
             } else {
-				LAHelper::log("error", "Module ".$moduleName." doesn't exists; Cannot generate !!!", $comm);
+				CAHelper::log("error", "Module ".$moduleName." doesn't exists; Cannot generate !!!", $comm);
             }
         }
 
         $templateDirectory = __DIR__.'/stubs';
 
         try {
-            LAHelper::log("line", "Creating migration...", $comm);
+            CAHelper::log("line", "Creating migration...", $comm);
             $migrationData = file_get_contents($templateDirectory."/migration.stub");
 
             $migrationData = str_replace("__migration_class_name__", $migrationClassName, $migrationData);
@@ -284,7 +284,7 @@ class CodeGenerator
             $migrationData = str_replace("__module_name__", $moduleName, $migrationData);
             $migrationData = str_replace("__model_name__", $modelName, $migrationData);
             $migrationData = str_replace("__view_column__", $viewColumnName, $migrationData);
-			$migrationData = str_replace("__fa_icon__", $faIcon, $migrationData);
+						$migrationData = str_replace("__fa_icon__", $faIcon, $migrationData);
             $migrationData = str_replace("__generated__", $generateData, $migrationData);
 
             file_put_contents(base_path('database/migrations/'.$migrationFileName), $migrationData);
@@ -292,7 +292,7 @@ class CodeGenerator
         } catch (Exception $e) {
             throw new Exception("Unable to generate migration for ".$table." : ".$e->getMessage(), 1);
         }
-        LAHelper::log("info", "Migration done: ".$migrationFileName."\n", $comm);
+        CAHelper::log("info", "Migration done: ".$migrationFileName."\n", $comm);
 	}
 
     // $config = CodeGenerator::generateConfig($module_name);
@@ -312,11 +312,11 @@ class CodeGenerator
         $config->dbTableName = $tableP;
         $config->fa_icon = $icon;
         $config->moduleName = ucfirst(str_plural($module));
-		$config->moduleName2 = str_replace('_', ' ', ucfirst(str_plural($module)));
+				$config->moduleName2 = str_replace('_', ' ', ucfirst(str_plural($module)));
         $config->controllerName = ucfirst(str_plural($module))."Controller";
         $config->singularVar = strtolower(str_singular($module));
         $config->singularCapitalVar = str_replace('_', ' ', ucfirst(str_singular($module)));
-		
+
         $module = Module::get($config->moduleName);
         if(!isset($module->id)) {
             throw new Exception("Please run 'php artisan migrate' for 'create_".$config->dbTableName."_table' in order to create CRUD.\nOr check if any problem in Module Name '".$config->moduleName."'.", 1);

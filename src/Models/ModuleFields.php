@@ -1,30 +1,30 @@
 <?php
 
-namespace Dwij\Laraadmin\Models;
+namespace Kipl\Moduleadmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Schema;
 use Log;
 use DB;
 
-use Dwij\Laraadmin\Models\Module;
+use Kipl\Moduleadmin\Models\Module;
 
 class ModuleFields extends Model
 {
     protected $table = 'module_fields';
-    
+
     protected $fillable = [
         "colname", "label", "module", "field_type", "unique", "defaultvalue", "minlength", "maxlength", "required", "popup_vals"
     ];
-    
+
     protected $hidden = [
-        
+
     ];
-    
+
     public static function createField($request) {
         $module = Module::find($request->module_id);
         $module_id = $request->module_id;
-        
+
         $field = ModuleFields::where('colname', $request->colname)->where('module', $module_id)->first();
         if(!isset($field->id)) {
             $field = new ModuleFields;
@@ -70,7 +70,7 @@ class ModuleFields extends Model
 				$field->popup_vals = "";
 			}
             $field->save();
-            
+
             // Create Schema for Module Field
             if (!Schema::hasTable($module->name_db)) {
                 Schema::create($module->name_db, function($table) {
@@ -91,7 +91,7 @@ class ModuleFields extends Model
 
     public static function updateField($id, $request) {
         $module_id = $request->module_id;
-        
+
         $field = ModuleFields::find($id);
 
         // Update the Schema
@@ -102,7 +102,7 @@ class ModuleFields extends Model
                 $table->renameColumn($field->colname, $request->colname);
             });
         }
-        
+
 		$isFieldTypeChange = false;
 
         // Update Context in ModuleFields
@@ -163,10 +163,10 @@ class ModuleFields extends Model
         $module = Module::where('name', $moduleName)->first();
         $fields = DB::table('module_fields')->where('module', $module->id)->get();
         $ftypes = ModuleFieldTypes::getFTypes();
-		
+
 		$fields_popup = array();
         $fields_popup['id'] = null;
-        
+
 		foreach($fields as $f) {
 			$f->field_type_str = array_search($f->field_type, $ftypes);
             $fields_popup [ $f->colname ] = $f;
@@ -197,7 +197,7 @@ class ModuleFields extends Model
 			return $value;
 		}
     }
-	
+
 	public static function listingColumnAccessScan($module_name, $listing_cols) {
         $module = Module::get($module_name);
 		$listing_cols_temp = array();

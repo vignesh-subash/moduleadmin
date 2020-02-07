@@ -1,17 +1,17 @@
 <?php
 
-namespace Dwij\Laraadmin\Models;
+namespace Kipl\Moduleadmin\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Dwij\Laraadmin\Helpers\LAHelper;
+use Kipl\Moduleadmin\Helpers\CAHelper;
 
 class Menu extends Model
 {
-    protected $table = 'la_menus';
-    
+    protected $table = 'ca_menus';
+
     protected $guarded = [
-        
+
     ];
 }

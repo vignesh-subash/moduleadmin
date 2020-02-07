@@ -1,15 +1,8 @@
 <?php
-/**
- * Migration generated using LaraAdmin
- * Help: http://laraadmin.com
- * LaraAdmin is open-sourced software licensed under the MIT license.
- * Developed by: Dwij IT Solutions
- * Developer Website: http://dwijitsolutions.com
- */
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Dwij\Laraadmin\Models\Module;
+use Kipl\Moduleadmin\Models\Module;
 
 class CreateOrganizationsTable extends Migration
 {
@@ -134,7 +127,7 @@ class CreateOrganizationsTable extends Migration
                 "listing_col" => false
             ]
         ]);
-        
+
         /*
         Module::generate("Module_Name", "Table_Name", "view_column_name" "Fields_Array");
 
